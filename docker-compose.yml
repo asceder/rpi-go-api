@@ -1,0 +1,35 @@
+version: "3"
+
+services:
+  rpi-hello-api:
+    build: .
+    container_name: rpi-hello-api
+    restart: always
+    expose:
+      - "8080"
+    networks:
+      - web
+
+  caddy:
+    image: caddy:alpine
+    container_name: caddy
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - rpi-hello-api
+    networks:
+      - web
+
+networks:
+  web:
+
+volumes:
+  caddy_data:
+  caddy_config:
+
